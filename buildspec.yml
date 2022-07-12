@@ -1,0 +1,27 @@
+version: 0.2
+
+proxy:
+  upload-artifacts: yes
+  logs: yes
+
+phases:
+  install:
+    runtime-versions:
+      nodejs: 14
+    commands:
+      - echo Build started on `date`
+      - node --version
+      - npm --version
+    finally:
+      - npm install
+  pre_build:
+    commands:
+      - npm test
+  build:
+    commands:
+      - npm run $BUILD_COMMAND
+  post_build:
+    commands:
+      - aws s3 rm s3://$S3_BUCKET_NAME --recursive
+      - aws s3 sync dist s3://$S3_BUCKET_NAME
+
