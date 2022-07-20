@@ -18,3 +18,8 @@ export const validationSchema = Yup.object().shape({
     .label('Password')
     .required(),
 });
+
+export const signInErrors = {
+  EMAIL_INCORRECT: 'Email is incorrect',
+  WRONG_PASSWORD: 'Wrong password',
+};

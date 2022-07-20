@@ -47,7 +47,7 @@ const SignIn = ({ setFieldValue, signInError, addUser, users }) => {
 
 SignIn.propTypes = {
   setFieldValue: PropTypes.func.isRequired,
-  signInError: PropTypes.bool,
+  signInError: PropTypes.string,
   addUser: PropTypes.func.isRequired,
   users: PropTypes.arrayOf(PropTypes.shape(UserShape)).isRequired,
 };

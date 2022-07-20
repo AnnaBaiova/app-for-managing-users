@@ -22,7 +22,7 @@ import Field from 'Patterns/Inputs/Field';
 import Select from 'Patterns/Inputs/Select';
 
 import { UserShape } from '../../../../shapes/users-shapes';
-import { userRoles, handleSubmit, validationSchema, mapPropsToValues, emailValidation } from '../../utils/user-helpers';
+import { userRoles, handleSubmit, validationSchema, mapPropsToValues } from '../../utils/user-helpers';
 
 const DialogActionsStyled = styled(DialogActions)({
   display: 'flex',
@@ -50,15 +50,16 @@ const ManageUser = ({
   users,
   isNewUser,
   setFieldValue,
-  isValid,
   values,
+  resetForm,
 }) => {
   const [user, setUser] = useState();
   const [isEmailValid, setIsEmailValid] = useState(true);
 
   useEffect(() => {
     setUser(selectedUser);
-  }, [selectedUser]);
+    resetForm();
+  }, [selectedUser, resetForm]);
 
   if (isEmpty(user) && !isNewUser) {
     return null;
@@ -74,7 +75,7 @@ const ManageUser = ({
   const handleChangeEmail = (event) => {
     const isThereSameEmail = users.filter(({ id }) => id !== user.id)
       .some(({ email }) => email.toLowerCase() === event.target.value.toLowerCase());
-    setIsEmailValid(emailValidation(event.target.value) && !isThereSameEmail);
+    setIsEmailValid(!isThereSameEmail);
     setUser({ ...user, email: event.target.value });
     setFieldValue('email', event.target.value);
   };
@@ -105,7 +106,7 @@ const ManageUser = ({
               />
             </Typography>
             <Field name="email" label="email" type="text" onChange={handleChangeEmail} />
-            {!isEmailValid && <Box component="span" color="red"> Email is not valid </Box>}
+            {!isEmailValid && <Box component="span" color="red"> User with this email is already exists </Box>}
             <Field name="password" label="Password" type="password" onChange={handleFieldChange} />
             <Field name="firstName" type="text" label="firstName" onChange={handleFieldChange} />
             <Field name="lastName" type="text" label="lastName" onChange={handleFieldChange} />
@@ -120,7 +121,7 @@ const ManageUser = ({
         </DialogContent>
         <DialogActionsStyled>
           <Button onClick={hideModal}>Close</Button>
-          <Button type="submit" disabled={!isValid}>{isNewUser ? 'Add' : 'Change'}</Button>
+          <Button type="submit">{isNewUser ? 'Add' : 'Change'}</Button>
         </DialogActionsStyled>
       </Form>
     </Dialog>
@@ -134,8 +135,8 @@ ManageUser.propTypes = {
   users: PropTypes.arrayOf(PropTypes.shape(UserShape)).isRequired,
   isNewUser: PropTypes.bool.isRequired,
   setFieldValue: PropTypes.func.isRequired,
-  isValid: PropTypes.bool.isRequired,
   values: PropTypes.shape(UserShape).isRequired,
+  resetForm: PropTypes.func.isRequired,
 };
 
 ManageUser.defaultProps = {

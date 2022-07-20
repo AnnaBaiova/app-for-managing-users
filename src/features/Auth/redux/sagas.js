@@ -6,6 +6,7 @@ import { actions as authActions } from 'Auth/redux/ducks';
 import { USERS, SIGN_IN as SIGN_IN_ROUTE } from 'Utils/router-helpers';
 
 import { SIGN_IN, SIGN_OUT } from './ducks';
+import { signInErrors } from '../utils/sign-in-helpers';
 
 export function* signUpSaga({ email, password }) {
   try {
@@ -25,12 +26,16 @@ export function* signInSaga({ payload: { email, password } }) {
     yield put(appActions.showAppLoading());
     const users = JSON.parse(localStorage.getItem('users'));
     const user = users.find((item) => item.email.toLowerCase() === email.toLowerCase());
-    if (user && user.password === password) {
-      yield put(authActions.signInSuccess(user));
-      localStorage.setItem('autorizedUser', JSON.stringify(user));
-    } else {
-      yield put(authActions.signInFailure());
+    if (!user) {
+      yield put(authActions.signInFailure(signInErrors.EMAIL_INCORRECT));
+      return null;
     }
+    if (user && user.password !== password) {
+      yield put(authActions.signInFailure(signInErrors.WRONG_PASSWORD));
+      return null;
+    }
+    yield put(authActions.signInSuccess(user));
+    localStorage.setItem('autorizedUser', JSON.stringify(user));
     return user;
   } finally {
     yield put(appActions.hideAppLoading());

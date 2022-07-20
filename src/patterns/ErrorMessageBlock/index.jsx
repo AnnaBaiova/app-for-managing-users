@@ -21,17 +21,17 @@ const ErrorMessageBlock = ({ error }) => {
 
   return (
     <Box width="100%" minHeight="40px" p=".25rem 0">
-      <MessageStyled>Incorrect email or password</MessageStyled>
+      <MessageStyled>{error}</MessageStyled>
     </Box>
   );
 };
 
 ErrorMessageBlock.propTypes = {
-  error: PropTypes.bool,
+  error: PropTypes.string,
 };
 
 ErrorMessageBlock.defaultProps = {
-  error: false,
+  error: null,
 };
 
 export default ErrorMessageBlock;

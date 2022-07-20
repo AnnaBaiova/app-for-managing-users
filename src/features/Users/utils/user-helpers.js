@@ -1,27 +1,18 @@
 import * as Yup from 'yup';
 
-export const emailValidation = (email) => {
-  const regex = /^(([^<>()[\]\.,;:\s@\"]+(\.[^<>()[\]\.,;:\s@\"]+)*)|(\".+\"))@(([^<>()[\]\.,;:\s@\"]+\.)+[^<>()[\]\.,;:\s@\"]{2,})$/i; // eslint-disable-line
-  if (!email || regex.test(email) === false) {
-    return false;
-  }
-  return true;
-};
-
 export const userRoles = {
   DOCTOR: 'doctor',
   ADMIN: 'admin',
   ACCOUNTANT: 'accountant',
 };
 
-export const handleSubmit = (user, { props: { editUser, addUser, resetForm, hideModal } }) => {
+export const handleSubmit = (user, { props: { editUser, addUser, hideModal } }) => {
   if (user.id) {
     editUser(user);
   } else {
     addUser(user);
   }
   hideModal();
-  resetForm();
 };
 
 export const mapPropsToValues = ({ selectedUser: { id, email, firstName, lastName, role, status, password } }) => {

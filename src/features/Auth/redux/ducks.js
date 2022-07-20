@@ -7,14 +7,14 @@ export const SIGN_OUT = createFlowType(`${ROOT}/SIGN_OUT`);
 
 const initialState = {
   isAuthenticated: false,
-  signInError: false,
+  signInError: null,
   user: null,
 };
 
 const signInRequest = (state) => ({
   ...state,
   isAuthenticated: false,
-  signInError: false,
+  signInError: null,
   email: null,
 });
 
@@ -23,12 +23,12 @@ const signInSuccess = (state, { payload }) => ({
   isAuthenticated: true,
   user: payload,
   email: payload.email,
-  signInError: false,
+  signInError: null,
 });
 
-const signInFailure = (state) => ({
+const signInFailure = (state, { payload }) => ({
   ...state,
-  signInError: true,
+  signInError: payload,
 });
 
 const signOut = (state) => ({
@@ -46,6 +46,6 @@ export default createReducer(initialState, {
 export const actions = {
   signIn: (credentials) => createAction(SIGN_IN.request, credentials),
   signInSuccess: (user) => createAction(SIGN_IN.success, user),
-  signInFailure: () => createAction(SIGN_IN.failure),
+  signInFailure: (error) => createAction(SIGN_IN.failure, error),
   signOut: () => createAction(SIGN_OUT.request),
 };
