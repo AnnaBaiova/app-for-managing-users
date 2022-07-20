@@ -47,7 +47,7 @@ export const validationSchema = Yup.object().shape({
     .required()
     .test(
       'passwordValid',
-      ({ label }) => `${label} is invalid`,
+      ({ label }) => `${label} must contain uppercase characters and at least one or more special characters.`,
       (value) => (value ? /(?=.*[a-z])(?=.*[0-9])(?=.*[A-Z])(?=.*[@#$%^&!+=]).{8,}/.test(value) : true),
     ),
   firstName: Yup
